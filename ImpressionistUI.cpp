@@ -306,6 +306,24 @@ void ImpressionistUI::cb_sizeSlides(Fl_Widget* o, void* v)
 	((ImpressionistUI*)(o->user_data()))->m_nSize=int( ((Fl_Slider *)o)->value() ) ;
 }
 
+// Updates the line width
+void ImpressionistUI::cb_lineWidthSlides(Fl_Widget* o, void* v)
+{ 
+		((ImpressionistUI*)(o->user_data()))->m_nLineWidth=int( ((Fl_Slider *)o)->value() ) ;
+}
+
+// Updates the line angle
+void ImpressionistUI::cb_lineAngleSlides(Fl_Widget* o, void* v)
+{
+		((ImpressionistUI*)(o->user_data()))->m_nLineAngle=int( ((Fl_Slider *)o)->value() ) ;
+}
+
+// Updates the alpha
+void ImpressionistUI::cb_alphaSlides(Fl_Widget* o, void* v)
+{
+		((ImpressionistUI*)(o->user_data()))->m_nAlpha=int( ((Fl_Slider *)o)->value() ) ;
+}
+		
 //---------------------------------- per instance functions --------------------------------------
 
 //------------------------------------------------
@@ -379,7 +397,7 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
 		{ "&Original Image", FL_ALT + 'o', (Fl_Callback *) ImpressionistUI::cb_original_image },
 		{ "&Edge image", FL_ALT + 'e', (Fl_Callback *)ImpressionistUI::cb_edge_image },
 		{ "&Another image", FL_ALT + 'a', (Fl_Callback *)ImpressionistUI::cb_another_image },
-	{ 0 },
+		{ 0 },
 	{ "&Options", 0, 0, 0, FL_SUBMENU },
 		{ "&Faster", FL_ALT + 'f', (Fl_Callback *)ImpressionistUI::cb_faster },
 		{ "&Safer", FL_ALT + 's', (Fl_Callback *)ImpressionistUI::cb_safer },
@@ -436,6 +454,9 @@ ImpressionistUI::ImpressionistUI() {
 	// init values
 
 	m_nSize = 10;
+	m_nLineWidth = 1;
+	m_nLineAngle = 0;
+	m_nAlpha = 1.00;
 
 	// brush dialog definition
 	m_brushDialog = new Fl_Window(400, 325, "Brush Dialog");
@@ -462,6 +483,45 @@ ImpressionistUI::ImpressionistUI() {
 		m_BrushSizeSlider->value(m_nSize);
 		m_BrushSizeSlider->align(FL_ALIGN_RIGHT);
 		m_BrushSizeSlider->callback(cb_sizeSlides);
+
+		// Add line width slider to the dialog
+		Fl_Value_Slider * m_LineWidthSlider = new Fl_Value_Slider(10, 110, 300, 20, "Line Width");
+		m_LineWidthSlider->user_data((void*)(this));	// record self to be used by static callback functions
+		m_LineWidthSlider->type(FL_HOR_NICE_SLIDER);
+	    m_LineWidthSlider->labelfont(FL_COURIER);
+	    m_LineWidthSlider->labelsize(12);
+		m_LineWidthSlider->minimum(1);
+		m_LineWidthSlider->maximum(40);
+		m_LineWidthSlider->step(1);
+		m_LineWidthSlider->value(m_nLineWidth);
+		m_LineWidthSlider->align(FL_ALIGN_RIGHT);
+		m_LineWidthSlider->callback(cb_lineWidthSlides);
+
+		// Add line angle slider to the dialog
+		Fl_Value_Slider * m_LineAngleSlider = new Fl_Value_Slider(10, 140, 300, 20, "Line Angle");
+		m_LineAngleSlider->user_data((void*)(this));	// record self to be used by static callback functions
+		m_LineAngleSlider->type(FL_HOR_NICE_SLIDER);
+	    m_LineAngleSlider->labelfont(FL_COURIER);
+	    m_LineAngleSlider->labelsize(12);
+		m_LineAngleSlider->minimum(1);
+		m_LineAngleSlider->maximum(359);
+		m_LineAngleSlider->step(1);
+		m_LineAngleSlider->value(m_nLineAngle);
+		m_LineAngleSlider->align(FL_ALIGN_RIGHT);
+		m_LineAngleSlider->callback(cb_lineAngleSlides);
+
+		//Add alpha slider to the dialog
+		Fl_Value_Slider * m_AlphaSlider = new Fl_Value_Slider(10, 170, 300, 20, "Alpha");
+		m_AlphaSlider->user_data((void*)(this));	// record self to be used by static callback functions
+		m_AlphaSlider->type(FL_HOR_NICE_SLIDER);
+	    m_AlphaSlider->labelfont(FL_COURIER);
+	    m_AlphaSlider->labelsize(12);
+		m_AlphaSlider->minimum(0.0);
+		m_AlphaSlider->maximum(1.00);
+		m_AlphaSlider->step(0.01);
+		m_AlphaSlider->value(m_nAlpha);
+		m_AlphaSlider->align(FL_ALIGN_RIGHT);
+		m_AlphaSlider->callback(cb_alphaSlides);
 
     m_brushDialog->end();	
 
