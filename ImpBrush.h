@@ -21,6 +21,14 @@ enum
 	NUM_BRUSH_TYPE // Make sure this stays at the end!
 };
 
+// TEMP: Stroke direction. Maybe move to another class later on
+enum
+{
+	SLIDER = 0,
+	GRADIENT,
+	BRUSH_DIRECTION,
+	NUM_STROKE_DIRECTION_TYPE
+};
 
 class ImpressionistDoc; // Pre-declaring class
 

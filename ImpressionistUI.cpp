@@ -264,7 +264,7 @@ void ImpressionistUI::cb_safer(Fl_Menu_* o, void* v) {
 //-----------------------------------------------------------
 void ImpressionistUI::cb_about(Fl_Menu_* o, void* v) 
 {
-	fl_message("Impressionist FLTK version for CS341, Spring 2002");
+	fl_message("Impressionist FLTK version for CS4411, Fall 2014");
 }
 
 //------- UI should keep track of the current for all the controls for answering the query from Doc ---------
@@ -284,6 +284,15 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget* o, void* v)
 	pDoc->setBrushType(type);
 }
 
+void ImpressionistUI::cb_strokeDirection(Fl_Widget* o, void* v)
+{
+	ImpressionistUI* pUI=((ImpressionistUI *)(o->user_data()));
+	ImpressionistDoc* pDoc=pUI->getDocument();
+
+	int type=(int)v;
+
+	//pDoc->setMyType(type);
+}	
 //------------------------------------------------------------
 // Clears the paintview canvas.
 // Called by the UI when the clear canvas button is pushed
@@ -323,7 +332,56 @@ void ImpressionistUI::cb_alphaSlides(Fl_Widget* o, void* v)
 {
 		((ImpressionistUI*)(o->user_data()))->m_nAlpha=int( ((Fl_Slider *)o)->value() ) ;
 }
+
+// Updates the edge clipping button
+void ImpressionistUI::cb_edgeClippingButton(Fl_Widget* o, void* v)
+	{
+		ImpressionistUI *pUI=((ImpressionistUI*)(o->user_data()));
+
+		if (pUI->IsEdgeClipping==TRUE) pUI->IsEdgeClipping=FALSE;
+		else pUI->IsEdgeClipping=TRUE;
+	}
 		
+// Updates the another gradient button
+void ImpressionistUI::cb_anotherGradientButton(Fl_Widget* o, void* v)
+	{
+		ImpressionistUI *pUI=((ImpressionistUI*)(o->user_data()));
+
+		if (pUI->IsAnotherGradient==TRUE) pUI->IsAnotherGradient=FALSE;
+		else pUI->IsAnotherGradient=TRUE;
+	}
+
+// Updates the spacing slider
+void ImpressionistUI::cb_spacingSlides(Fl_Widget* o, void* v) {
+	((ImpressionistUI*)(o->user_data()))->m_nSpacing=int( ((Fl_Slider *)o)->value() ) ;
+}
+
+// Updates the size random light button
+void ImpressionistUI::cb_sizeRandomButton(Fl_Widget* o, void* v)
+	{
+		ImpressionistUI *pUI=((ImpressionistUI*)(o->user_data()));
+
+		if (pUI->IsSizeRandom==TRUE) pUI->IsSizeRandom=FALSE;
+		else pUI->IsSizeRandom=TRUE;
+	}
+
+//TODO
+void ImpressionistUI::cb_paintButton(Fl_Widget* o, void* v)
+{
+	return;
+}
+
+// Updates the edge threshold slider
+void ImpressionistUI::cb_edgeThresholdSlides(Fl_Widget* o, void* v) {
+	((ImpressionistUI*)(o->user_data()))->m_nEdgeThreshold=int( ((Fl_Slider *)o)->value() ) ;
+}
+
+//TODO
+void ImpressionistUI::cb_doItButton(Fl_Widget* o, void* v)
+{
+	return;
+}
+
 //---------------------------------- per instance functions --------------------------------------
 
 //------------------------------------------------
@@ -421,6 +479,15 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE+1] = {
 };
 
 
+// Stroke direction choice menu definition
+Fl_Menu_Item ImpressionistUI::m_StrokeDirectionChoiceMenu[NUM_STROKE_DIRECTION_TYPE + 1] = {
+	{ "Slider/Right Mouse", FL_ALT + 's', (Fl_Callback *)ImpressionistUI::cb_strokeDirection, (void *)SLIDER },
+	{ "Gradient", FL_ALT + 'g', (Fl_Callback *)ImpressionistUI::cb_strokeDirection, (void *)GRADIENT },
+	{ "Brush Direction", FL_ALT + 'b', (Fl_Callback *)ImpressionistUI::cb_strokeDirection, (void *)BRUSH_DIRECTION },
+	{ 0 }
+};
+
+
 
 //----------------------------------------------------
 // Constructor.  Creates all of the widgets.
@@ -457,9 +524,13 @@ ImpressionistUI::ImpressionistUI() {
 	m_nLineWidth = 1;
 	m_nLineAngle = 0;
 	m_nAlpha = 1.00;
+	IsEdgeClipping = TRUE;
+	m_nSpacing = 4;
+	IsSizeRandom = TRUE;
+	m_nEdgeThreshold = 200;
 
 	// brush dialog definition
-	m_brushDialog = new Fl_Window(400, 325, "Brush Dialog");
+	m_brushDialog = new Fl_Window(410, 335, "Brush Dialog");
 		// Add a brush type choice to the dialog
 		m_BrushTypeChoice = new Fl_Choice(50,10,150,25,"&Brush");
 		m_BrushTypeChoice->user_data((void*)(this));	// record self to be used by static callback functions
@@ -469,6 +540,12 @@ ImpressionistUI::ImpressionistUI() {
 		m_ClearCanvasButton = new Fl_Button(240,10,150,25,"&Clear Canvas");
 		m_ClearCanvasButton->user_data((void*)(this));
 		m_ClearCanvasButton->callback(cb_clear_canvas_button);
+
+		// Add a stroke direction choice to the dialog
+		m_StrokeDirectionChoice = new Fl_Choice(115,45,150,25,"&Stroke Direction");
+		m_StrokeDirectionChoice->user_data((void*)(this));	 // record self to be used by static callback functions
+		m_StrokeDirectionChoice->menu(m_StrokeDirectionChoiceMenu);
+		m_StrokeDirectionChoice->callback(cb_strokeDirection);
 
 
 		// Add brush size slider to the dialog 
@@ -510,7 +587,7 @@ ImpressionistUI::ImpressionistUI() {
 		m_LineAngleSlider->align(FL_ALIGN_RIGHT);
 		m_LineAngleSlider->callback(cb_lineAngleSlides);
 
-		//Add alpha slider to the dialog
+		// Add alpha slider to the dialog
 		Fl_Value_Slider * m_AlphaSlider = new Fl_Value_Slider(10, 170, 300, 20, "Alpha");
 		m_AlphaSlider->user_data((void*)(this));	// record self to be used by static callback functions
 		m_AlphaSlider->type(FL_HOR_NICE_SLIDER);
@@ -522,6 +599,71 @@ ImpressionistUI::ImpressionistUI() {
 		m_AlphaSlider->value(m_nAlpha);
 		m_AlphaSlider->align(FL_ALIGN_RIGHT);
 		m_AlphaSlider->callback(cb_alphaSlides);
+
+
+
+		// Add a light button for edge clipping
+		m_EdgeClippingButton = new Fl_Light_Button(10,200,130,25,"&Edge Clipping");
+		m_EdgeClippingButton->user_data((void*)(this));   // record self to be used by static callback functions
+		m_EdgeClippingButton->value(IsEdgeClipping);
+		m_EdgeClippingButton->callback(cb_edgeClippingButton);
+
+		// Add a light button for another gradient
+		m_AnotherGradientButton = new Fl_Light_Button(240,200,150,25,"&Another Gradient");
+		m_AnotherGradientButton->user_data((void*)(this));   // record self to be used by static callback functions
+		m_AnotherGradientButton->callback(cb_anotherGradientButton);
+
+		m_SpacingSlider = new Fl_Value_Slider(20, 240, 140, 20, "Spacing");
+		m_SpacingSlider->user_data((void*)(this));	// record self to be used by static callback functions
+		m_SpacingSlider->type(FL_HOR_NICE_SLIDER);
+	    m_SpacingSlider->labelfont(FL_COURIER);
+	    m_SpacingSlider->labelsize(12);
+		m_SpacingSlider->minimum(1);
+		m_SpacingSlider->maximum(16);
+		m_SpacingSlider->step(1);
+		m_SpacingSlider->value(m_nSpacing);
+		m_SpacingSlider->align(FL_ALIGN_RIGHT);
+		m_SpacingSlider->callback(cb_spacingSlides);
+
+		m_SizeRandomButton = new Fl_Light_Button(220,240,100,20,"&Size Rand.");
+		m_SizeRandomButton->user_data((void*)(this));   // record self to be used by static callback functions
+		m_SizeRandomButton->value(IsSizeRandom);
+		m_SizeRandomButton->callback(cb_sizeRandomButton);
+
+		m_PaintButton = new Fl_Button(330,240,50,20,"&Paint");
+		m_PaintButton->user_data((void*)(this));
+		m_PaintButton->callback(cb_paintButton);
+
+		m_PaintGroupBox = new Fl_Box(FL_THIN_UP_BOX, 10,230,380,40,"");
+		m_PaintGroup = new Fl_Group(10, 230, 380, 40, "");
+		m_PaintGroup->user_data((void*)this);
+		m_PaintGroup->resizable(m_PaintGroupBox);
+		m_PaintGroup->add(m_SpacingSlider);
+		m_PaintGroup->add(m_SizeRandomButton);
+		m_PaintGroup->add(m_PaintButton);
+
+		m_EdgeThresholdSlider = new Fl_Value_Slider(20, 285, 200, 20, "Edge Threshold");
+		m_EdgeThresholdSlider->user_data((void*)(this));	// record self to be used by static callback functions
+		m_EdgeThresholdSlider->type(FL_HOR_NICE_SLIDER);
+	    m_EdgeThresholdSlider->labelfont(FL_COURIER);
+	    m_EdgeThresholdSlider->labelsize(12);
+		m_EdgeThresholdSlider->minimum(0);
+		m_EdgeThresholdSlider->maximum(500);
+		m_EdgeThresholdSlider->step(1);
+		m_EdgeThresholdSlider->value(m_nEdgeThreshold);
+		m_EdgeThresholdSlider->align(FL_ALIGN_RIGHT);
+		m_EdgeThresholdSlider->callback(cb_edgeThresholdSlides);
+
+		m_DoItButton = new Fl_Button(330,285,50,20,"&Do it");
+		m_DoItButton->user_data((void*)(this));
+		m_DoItButton->callback(cb_doItButton);
+
+		m_DoItGroupBox = new Fl_Box(FL_THIN_UP_BOX, 10,275,380,40,"");
+		m_DoItGroup = new Fl_Group(10, 275, 380, 40, "");
+		m_DoItGroup->user_data((void*)this);
+		m_DoItGroup->resizable(m_DoItGroupBox);
+		m_DoItGroup->add(m_EdgeThresholdSlider);
+		m_DoItGroup->add(m_DoItButton);
 
     m_brushDialog->end();	
 
