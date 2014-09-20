@@ -71,6 +71,14 @@ public:
 	int					getSize();
 	void				setSize(int size);
 
+	int					getLineWidth();
+	void				setLineWidth(int lineWidth);
+
+	int					getLineAngle();
+	void				setLineAngle(int lineAngle);
+
+
+
 private:
 	ImpressionistDoc*	m_pDoc;		// pointer to document to communicate with the document
 

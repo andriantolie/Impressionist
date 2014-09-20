@@ -100,6 +100,47 @@ int ImpressionistDoc::getSize()
 	return m_pUI->getSize();
 }
 
+
+//-------------------------------------------------
+// Set the brush size
+//-------------------------------------------------
+void ImpressionistDoc::setSize(int size)
+{
+	m_pUI->setSize(size);
+
+}
+
+//------------------------------------------------
+// Return the line width
+//------------------------------------------------
+int ImpressionistDoc::getLineWidth()
+{
+	return m_pUI->getLineWidth();
+}
+
+//-------------------------------------------------
+// Set the line width
+//-------------------------------------------------
+void ImpressionistDoc::setLineWidth(int lineWidth)
+{
+	m_pUI->setLineWidth(lineWidth);
+}
+//------------------------------------------------
+// Return the line angle
+//------------------------------------------------
+int ImpressionistDoc::getLineAngle()
+{
+	return m_pUI->getLineAngle();
+}
+
+//-------------------------------------------------
+// Set the line angle
+//-------------------------------------------------
+void ImpressionistDoc::setLineAngle(int lineAngle)
+{
+	m_pUI->setLineAngle(lineAngle);
+}
+
 //---------------------------------------------------------
 // Load the specified image
 // This is called by the UI when the load image button is 
