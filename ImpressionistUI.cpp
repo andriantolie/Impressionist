@@ -620,7 +620,7 @@ ImpressionistUI::ImpressionistUI() {
 		m_LineAngleSlider->type(FL_HOR_NICE_SLIDER);
 	    m_LineAngleSlider->labelfont(FL_COURIER);
 	    m_LineAngleSlider->labelsize(12);
-		m_LineAngleSlider->minimum(1);
+		m_LineAngleSlider->minimum(0);
 		m_LineAngleSlider->maximum(359);
 		m_LineAngleSlider->step(1);
 		m_LineAngleSlider->value(m_nLineAngle);
