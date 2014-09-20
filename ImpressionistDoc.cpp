@@ -14,6 +14,7 @@
 
 // Include individual brush headers here.
 #include "PointBrush.h"
+#include "CircleBrush.h"
 
 
 #define DESTROY(p)	{  if ((p)!=NULL) {delete [] p; p=NULL; } }
@@ -38,7 +39,7 @@ ImpressionistDoc::ImpressionistDoc()
 	ImpBrush::c_pBrushes[BRUSH_LINES]				
 		= new PointBrush( this, "Lines" );
 	ImpBrush::c_pBrushes[BRUSH_CIRCLES]				
-		= new PointBrush( this, "Circles" );
+		= new CircleBrush( this, "Circles" );
 	ImpBrush::c_pBrushes[BRUSH_SCATTERED_POINTS]	
 		= new PointBrush( this, "Scattered Points" );
 	ImpBrush::c_pBrushes[BRUSH_SCATTERED_LINES]		
@@ -75,6 +76,20 @@ char* ImpressionistDoc::getImageName()
 void ImpressionistDoc::setBrushType(int type)
 {
 	m_pCurrentBrush	= ImpBrush::c_pBrushes[type];
+	if (type == BRUSH_LINES || type == BRUSH_SCATTERED_LINES) {
+		m_pUI->m_StrokeDirectionChoice->activate();
+		m_pUI->m_LineWidthSlider->activate();
+		m_pUI->m_LineAngleSlider->activate();
+		m_pUI->m_EdgeClippingButton->activate();
+		m_pUI->m_AnotherGradientButton->activate();
+	}
+	else {
+		m_pUI->m_StrokeDirectionChoice->deactivate();
+		m_pUI->m_LineWidthSlider->deactivate();
+		m_pUI->m_LineAngleSlider->deactivate();
+		m_pUI->m_EdgeClippingButton->deactivate();
+		m_pUI->m_AnotherGradientButton->deactivate();
+	}
 }
 
 //---------------------------------------------------------

@@ -264,7 +264,7 @@ void ImpressionistUI::cb_safer(Fl_Menu_* o, void* v) {
 //-----------------------------------------------------------
 void ImpressionistUI::cb_about(Fl_Menu_* o, void* v) 
 {
-	fl_message("Impressionist FLTK version for CS4411, Fall 2014");
+	fl_message("Impressionist FLTK version for COMP4411, Fall 2014");
 }
 
 //------- UI should keep track of the current for all the controls for answering the query from Doc ---------
@@ -546,6 +546,7 @@ ImpressionistUI::ImpressionistUI() {
 		m_StrokeDirectionChoice->user_data((void*)(this));	 // record self to be used by static callback functions
 		m_StrokeDirectionChoice->menu(m_StrokeDirectionChoiceMenu);
 		m_StrokeDirectionChoice->callback(cb_strokeDirection);
+		m_StrokeDirectionChoice->deactivate();
 
 
 		// Add brush size slider to the dialog 
@@ -562,7 +563,7 @@ ImpressionistUI::ImpressionistUI() {
 		m_BrushSizeSlider->callback(cb_sizeSlides);
 
 		// Add line width slider to the dialog
-		Fl_Value_Slider * m_LineWidthSlider = new Fl_Value_Slider(10, 110, 300, 20, "Line Width");
+		m_LineWidthSlider = new Fl_Value_Slider(10, 110, 300, 20, "Line Width");
 		m_LineWidthSlider->user_data((void*)(this));	// record self to be used by static callback functions
 		m_LineWidthSlider->type(FL_HOR_NICE_SLIDER);
 	    m_LineWidthSlider->labelfont(FL_COURIER);
@@ -573,9 +574,11 @@ ImpressionistUI::ImpressionistUI() {
 		m_LineWidthSlider->value(m_nLineWidth);
 		m_LineWidthSlider->align(FL_ALIGN_RIGHT);
 		m_LineWidthSlider->callback(cb_lineWidthSlides);
+		//if (m_pDoc->m_pCurrentBrush != ImpBrush::c_pBrushes[BRUSH_LINES] || m_pDoc->m_pCurrentBrush != ImpBrush::c_pBrushes[BRUSH_SCATTERED_LINES])
+			m_LineWidthSlider->deactivate();
 
 		// Add line angle slider to the dialog
-		Fl_Value_Slider * m_LineAngleSlider = new Fl_Value_Slider(10, 140, 300, 20, "Line Angle");
+		m_LineAngleSlider = new Fl_Value_Slider(10, 140, 300, 20, "Line Angle");
 		m_LineAngleSlider->user_data((void*)(this));	// record self to be used by static callback functions
 		m_LineAngleSlider->type(FL_HOR_NICE_SLIDER);
 	    m_LineAngleSlider->labelfont(FL_COURIER);
@@ -586,9 +589,10 @@ ImpressionistUI::ImpressionistUI() {
 		m_LineAngleSlider->value(m_nLineAngle);
 		m_LineAngleSlider->align(FL_ALIGN_RIGHT);
 		m_LineAngleSlider->callback(cb_lineAngleSlides);
+		m_LineAngleSlider->deactivate();
 
 		// Add alpha slider to the dialog
-		Fl_Value_Slider * m_AlphaSlider = new Fl_Value_Slider(10, 170, 300, 20, "Alpha");
+		m_AlphaSlider = new Fl_Value_Slider(10, 170, 300, 20, "Alpha");
 		m_AlphaSlider->user_data((void*)(this));	// record self to be used by static callback functions
 		m_AlphaSlider->type(FL_HOR_NICE_SLIDER);
 	    m_AlphaSlider->labelfont(FL_COURIER);
@@ -607,11 +611,13 @@ ImpressionistUI::ImpressionistUI() {
 		m_EdgeClippingButton->user_data((void*)(this));   // record self to be used by static callback functions
 		m_EdgeClippingButton->value(IsEdgeClipping);
 		m_EdgeClippingButton->callback(cb_edgeClippingButton);
+		m_EdgeClippingButton->deactivate();
 
 		// Add a light button for another gradient
 		m_AnotherGradientButton = new Fl_Light_Button(240,200,150,25,"&Another Gradient");
 		m_AnotherGradientButton->user_data((void*)(this));   // record self to be used by static callback functions
 		m_AnotherGradientButton->callback(cb_anotherGradientButton);
+		m_AnotherGradientButton->deactivate();
 
 		m_SpacingSlider = new Fl_Value_Slider(20, 240, 140, 20, "Spacing");
 		m_SpacingSlider->user_data((void*)(this));	// record self to be used by static callback functions
