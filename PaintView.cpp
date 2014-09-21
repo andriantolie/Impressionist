@@ -169,10 +169,10 @@ int PaintView::handle(int event)
 		coord.x = Fl::event_x();
 		coord.y = Fl::event_y();
 		if (Fl::event_button() > 1){
-			eventToDo = RIGHT_MOUSE_DOWN;
+			eventToDo = RIGHT_MOUSE_DRAG;
 		}
 		else{
-			eventToDo = LEFT_MOUSE_DOWN;
+			eventToDo = LEFT_MOUSE_DRAG;
 			if (brushEndCoord != NULL){
 				delete brushStartCoord;
 				brushStartCoord = brushEndCoord;
@@ -186,10 +186,10 @@ int PaintView::handle(int event)
 		coord.x = Fl::event_x();
 		coord.y = Fl::event_y();
 		if (Fl::event_button() > 1){
-			eventToDo = RIGHT_MOUSE_DOWN;
+			eventToDo = RIGHT_MOUSE_UP;
 		}
 		else{
-			eventToDo = LEFT_MOUSE_DOWN;
+			eventToDo = LEFT_MOUSE_UP;
 			delete brushStartCoord;
 			delete brushEndCoord;
 			brushStartCoord = NULL;
