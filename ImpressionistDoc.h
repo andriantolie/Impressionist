@@ -31,7 +31,7 @@ public:
 	int		getLineWidth();						// get the UI lineWidth
 	void	setLineWidth(int lineWidth);				// set the UI lineWidth
 	int		getLineAngle();						// get the UI lineAngle
-	void	setLineAngle(int lineAngle);				// set the UI lineAngle
+	void	setLineAngle(int lineAngle, int brushStrokeDirectionType);				// set the UI lineAngle
 
 	char*	getImageName();					// get the current image name
 	

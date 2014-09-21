@@ -471,17 +471,20 @@ int ImpressionistUI::getLineAngle()
 	else if (m_StrokeDirectionChoice->value() == BRUSH_DIRECTION){
 		return m_paintView->getBrushDirection();
 	}
+	return m_nLineAngle;
 }
 
 //-------------------------------------------------
 // Set the line angle
 //-------------------------------------------------
-void ImpressionistUI::setLineAngle(int lineAngle)
+void ImpressionistUI::setLineAngle(int lineAngle, int brushStrokeDirectionType)
 {
-	m_nLineAngle = lineAngle;
+	if (m_StrokeDirectionChoice->value() == brushStrokeDirectionType){
+		m_nLineAngle = lineAngle;
 
-	if (lineAngle <= 40 && m_StrokeDirectionChoice->value() == SLIDER)
-		m_LineAngleSlider->value(m_nLineAngle);
+		if (lineAngle <= 359 && m_StrokeDirectionChoice->value() == SLIDER)
+			m_LineAngleSlider->value(m_nLineAngle);
+	}
 }
 
 // Main menu definition

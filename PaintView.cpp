@@ -111,22 +111,41 @@ void PaintView::draw()
 			m_pDoc->m_pCurrentBrush->BrushBegin( source, target );
 			break;
 		case LEFT_MOUSE_DRAG:
+			m_pDoc->setLineAngle(getBrushDirection(), BRUSH_DIRECTION);
 			m_pDoc->m_pCurrentBrush->BrushMove( source, target );
 			break;
 		case LEFT_MOUSE_UP:
+			//delete pointer data
+			delete brushStartCoord;
+			delete brushEndCoord;
+			brushStartCoord = NULL;
+			brushEndCoord = NULL;
 			m_pDoc->m_pCurrentBrush->BrushEnd( source, target );
 
 			SaveCurrentContent();
 			RestoreContent();
 			break;
 		case RIGHT_MOUSE_DOWN:
-
+			SaveCurrentContent();
 			break;
 		case RIGHT_MOUSE_DRAG:
-
+			//draw red Line
+			RestoreContent();
+			glBegin(GL_LINES);
+				glColor3f(1.0, 0.0, 0.0);
+				glVertex2d(brushStartCoord->x, m_nWindowHeight - brushStartCoord->y);
+				glVertex2d(brushEndCoord->x, m_nWindowHeight - brushEndCoord->y);
+			glEnd();
+			glFlush();
 			break;
 		case RIGHT_MOUSE_UP:
-
+			RestoreContent();
+			m_pDoc->setLineAngle(getBrushDirection(), SLIDER);
+			//delete pointer data
+			delete brushStartCoord;
+			delete brushEndCoord;
+			brushStartCoord = NULL;
+			brushEndCoord = NULL;
 			break;
 
 		default:
@@ -157,6 +176,7 @@ int PaintView::handle(int event)
 		coord.y = Fl::event_y();
 		if (Fl::event_button() > 1){
 			eventToDo = RIGHT_MOUSE_DOWN;
+			brushStartCoord = new Point(coord.x, coord.y);
 		}
 		else{
 			eventToDo = LEFT_MOUSE_DOWN;
@@ -170,6 +190,7 @@ int PaintView::handle(int event)
 		coord.y = Fl::event_y();
 		if (Fl::event_button() > 1){
 			eventToDo = RIGHT_MOUSE_DRAG;
+			brushEndCoord = new Point(coord.x, coord.y);
 		}
 		else{
 			eventToDo = LEFT_MOUSE_DRAG;
@@ -190,10 +211,6 @@ int PaintView::handle(int event)
 		}
 		else{
 			eventToDo = LEFT_MOUSE_UP;
-			delete brushStartCoord;
-			delete brushEndCoord;
-			brushStartCoord = NULL;
-			brushEndCoord = NULL;
 		}
 		isAnEvent=1;
 		redraw();
