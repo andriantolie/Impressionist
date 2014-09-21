@@ -8,8 +8,6 @@
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
 #include "Linebrush.h"
-#include <iostream>
-using namespace std;
 
 extern float frand();
 
