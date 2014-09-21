@@ -464,7 +464,13 @@ void ImpressionistUI::setLineWidth(int lineWidth)
 //------------------------------------------------
 int ImpressionistUI::getLineAngle()
 {
-	return m_nLineAngle;
+	
+	if (m_StrokeDirectionChoice->value() == SLIDER){
+		return m_nLineAngle;
+	}
+	else if (m_StrokeDirectionChoice->value() == BRUSH_DIRECTION){
+		return m_paintView->getBrushDirection();
+	}
 }
 
 //-------------------------------------------------
@@ -474,7 +480,7 @@ void ImpressionistUI::setLineAngle(int lineAngle)
 {
 	m_nLineAngle = lineAngle;
 
-	if (lineAngle <= 40)
+	if (lineAngle <= 40 && m_StrokeDirectionChoice->value() == SLIDER)
 		m_LineAngleSlider->value(m_nLineAngle);
 }
 
@@ -711,3 +717,4 @@ ImpressionistUI::ImpressionistUI() {
     m_brushDialog->end();	
 
 }
+

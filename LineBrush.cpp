@@ -40,20 +40,21 @@ void LineBrush::BrushMove(const Point source, const Point target)
 	int lineSize = pDoc->getSize();
 	int lineAngle = pDoc->getLineAngle();
 
+	if (lineAngle >= 0 && lineAngle < 360){
+		int startX = target.x - (lineSize / 2) * cos(lineAngle * M_PI / 180);
+		int startY = target.y - (lineSize / 2) * sin(lineAngle * M_PI / 180);
+		int endX = target.x + (lineSize / 2) * cos(lineAngle * M_PI / 180);
+		int endY = target.y + (lineSize / 2) * sin(lineAngle * M_PI / 180);
 
-	int startX = target.x - (lineSize / 2) * cos(lineAngle * M_PI / 180);
-	int startY = target.y - (lineSize / 2) * sin(lineAngle * M_PI / 180);
-	int endX = target.x + (lineSize / 2) * cos(lineAngle * M_PI / 180);
-	int endY = target.y + (lineSize / 2) * sin(lineAngle * M_PI / 180);
+		glBegin(GL_LINES);
 
-	glBegin(GL_LINES);
+		SetColor(source);
 
-	SetColor(source);
+		glVertex2d(startX, startY);
+		glVertex2d(endX, endY);
 
-	glVertex2d(startX, startY);
-	glVertex2d(endX, endY);
-
-	glEnd();
+		glEnd();
+	}
 }
 
 void LineBrush::BrushEnd(const Point source, const Point target)

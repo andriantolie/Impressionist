@@ -9,7 +9,7 @@
 #include "impressionistUI.h"
 #include "paintview.h"
 #include "ImpBrush.h"
-
+#include <math.h>
 
 #define LEFT_MOUSE_DOWN		1
 #define LEFT_MOUSE_DRAG		2
@@ -28,6 +28,7 @@ static int		eventToDo;
 static int		isAnEvent=0;
 static Point	coord;
 
+
 PaintView::PaintView(int			x, 
 					 int			y, 
 					 int			w, 
@@ -37,6 +38,8 @@ PaintView::PaintView(int			x,
 {
 	m_nWindowWidth	= w;
 	m_nWindowHeight	= h;
+	brushStartCoord = NULL;
+	brushEndCoord = NULL;
 
 }
 
@@ -144,38 +147,54 @@ void PaintView::draw()
 
 int PaintView::handle(int event)
 {
-	switch(event)
+	switch (event)
 	{
 	case FL_ENTER:
-	    redraw();
+		redraw();
 		break;
 	case FL_PUSH:
 		coord.x = Fl::event_x();
 		coord.y = Fl::event_y();
-		if (Fl::event_button()>1)
-			eventToDo=RIGHT_MOUSE_DOWN;
-		else
-			eventToDo=LEFT_MOUSE_DOWN;
+		if (Fl::event_button() > 1){
+			eventToDo = RIGHT_MOUSE_DOWN;
+		}
+		else{
+			eventToDo = LEFT_MOUSE_DOWN;
+			brushStartCoord = new Point(coord.x, coord.y);
+		}
 		isAnEvent=1;
 		redraw();
 		break;
 	case FL_DRAG:
 		coord.x = Fl::event_x();
 		coord.y = Fl::event_y();
-		if (Fl::event_button()>1)
-			eventToDo=RIGHT_MOUSE_DRAG;
-		else
-			eventToDo=LEFT_MOUSE_DRAG;
+		if (Fl::event_button() > 1){
+			eventToDo = RIGHT_MOUSE_DOWN;
+		}
+		else{
+			eventToDo = LEFT_MOUSE_DOWN;
+			if (brushEndCoord != NULL){
+				delete brushStartCoord;
+				brushStartCoord = brushEndCoord;
+			}
+			brushEndCoord = new Point(coord.x, coord.y);
+		}
 		isAnEvent=1;
 		redraw();
 		break;
 	case FL_RELEASE:
 		coord.x = Fl::event_x();
 		coord.y = Fl::event_y();
-		if (Fl::event_button()>1)
-			eventToDo=RIGHT_MOUSE_UP;
-		else
-			eventToDo=LEFT_MOUSE_UP;
+		if (Fl::event_button() > 1){
+			eventToDo = RIGHT_MOUSE_DOWN;
+		}
+		else{
+			eventToDo = LEFT_MOUSE_DOWN;
+			delete brushStartCoord;
+			delete brushEndCoord;
+			brushStartCoord = NULL;
+			brushEndCoord = NULL;
+		}
 		isAnEvent=1;
 		redraw();
 		break;
@@ -239,4 +258,24 @@ void PaintView::RestoreContent()
 				  m_pPaintBitstart);
 
 //	glDrawBuffer(GL_FRONT);
+}
+int PaintView::getBrushDirection(){
+
+	if (!(brushStartCoord == NULL || brushEndCoord == NULL)){
+
+		int normalizedX = brushEndCoord->x - brushStartCoord->x;
+		int normalizedY = -(brushEndCoord->y - brushStartCoord->y);
+
+		int angle = atan2((float)normalizedY, (float)normalizedX) * 180 / M_PI;
+		if (angle >= 0){
+
+			return angle;
+		}
+		else{
+			return angle + 360;
+		}
+	}
+	else{
+		return -1;
+	}
 }
