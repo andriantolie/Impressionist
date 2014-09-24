@@ -75,7 +75,7 @@ public:
 	void				setLineWidth(int lineWidth);
 
 	int					getLineAngle();
-	void				setLineAngle(int lineAngle, int brushStrokeDirectionType);
+	void				setLineAngle(int lineAngle);
 
 
 

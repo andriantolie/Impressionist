@@ -13,11 +13,15 @@
 class LineBrush : public ImpBrush
 {
 public:
+	Point* brushStartCoord;
+	Point* brushEndCoord;
 	LineBrush(ImpressionistDoc* pDoc = NULL, char* name = NULL);
 
 	void BrushBegin(const Point source, const Point target);
 	void BrushMove(const Point source, const Point target);
 	void BrushEnd(const Point source, const Point target);
+	void drawLine(const Point source, const Point target, const int lineSize, const int lineAngle);
+	int getBrushDirection();
 	char* BrushName(void);
 };
 

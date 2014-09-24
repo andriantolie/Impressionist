@@ -18,8 +18,6 @@ class ImpressionistDoc;
 class PaintView : public Fl_Gl_Window
 {
 public:
-	Point*  brushStartCoord;
-	Point*	brushEndCoord;
 	PaintView(int x, int y, int w, int h, const char* l);
 	void draw();
 	int handle(int event);
@@ -33,7 +31,6 @@ public:
 	void RestoreContent();
 
 	ImpressionistDoc *m_pDoc;
-	int getBrushDirection();
 
 private:
 	GLvoid* m_pPaintBitstart;

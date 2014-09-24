@@ -38,8 +38,6 @@ PaintView::PaintView(int			x,
 {
 	m_nWindowWidth	= w;
 	m_nWindowHeight	= h;
-	brushStartCoord = NULL;
-	brushEndCoord = NULL;
 
 }
 
@@ -111,41 +109,19 @@ void PaintView::draw()
 			m_pDoc->m_pCurrentBrush->BrushBegin( source, target );
 			break;
 		case LEFT_MOUSE_DRAG:
-			m_pDoc->setLineAngle(getBrushDirection(), BRUSH_DIRECTION);
 			m_pDoc->m_pCurrentBrush->BrushMove( source, target );
 			break;
 		case LEFT_MOUSE_UP:
-			//delete pointer data
-			delete brushStartCoord;
-			delete brushEndCoord;
-			brushStartCoord = NULL;
-			brushEndCoord = NULL;
 			m_pDoc->m_pCurrentBrush->BrushEnd( source, target );
 
 			SaveCurrentContent();
 			RestoreContent();
 			break;
 		case RIGHT_MOUSE_DOWN:
-			SaveCurrentContent();
 			break;
 		case RIGHT_MOUSE_DRAG:
-			//draw red Line
-			RestoreContent();
-			glBegin(GL_LINES);
-				glColor3f(1.0, 0.0, 0.0);
-				glVertex2d(brushStartCoord->x, m_nWindowHeight - brushStartCoord->y);
-				glVertex2d(brushEndCoord->x, m_nWindowHeight - brushEndCoord->y);
-			glEnd();
-			glFlush();
 			break;
 		case RIGHT_MOUSE_UP:
-			RestoreContent();
-			m_pDoc->setLineAngle(getBrushDirection(), SLIDER);
-			//delete pointer data
-			delete brushStartCoord;
-			delete brushEndCoord;
-			brushStartCoord = NULL;
-			brushEndCoord = NULL;
 			break;
 
 		default:
@@ -176,11 +152,9 @@ int PaintView::handle(int event)
 		coord.y = Fl::event_y();
 		if (Fl::event_button() > 1){
 			eventToDo = RIGHT_MOUSE_DOWN;
-			brushStartCoord = new Point(coord.x, coord.y);
 		}
 		else{
 			eventToDo = LEFT_MOUSE_DOWN;
-			brushStartCoord = new Point(coord.x, coord.y);
 		}
 		isAnEvent=1;
 		redraw();
@@ -190,15 +164,9 @@ int PaintView::handle(int event)
 		coord.y = Fl::event_y();
 		if (Fl::event_button() > 1){
 			eventToDo = RIGHT_MOUSE_DRAG;
-			brushEndCoord = new Point(coord.x, coord.y);
 		}
 		else{
 			eventToDo = LEFT_MOUSE_DRAG;
-			if (brushEndCoord != NULL){
-				delete brushStartCoord;
-				brushStartCoord = brushEndCoord;
-			}
-			brushEndCoord = new Point(coord.x, coord.y);
 		}
 		isAnEvent=1;
 		redraw();
@@ -275,24 +243,4 @@ void PaintView::RestoreContent()
 				  m_pPaintBitstart);
 
 //	glDrawBuffer(GL_FRONT);
-}
-int PaintView::getBrushDirection(){
-
-	if (!(brushStartCoord == NULL || brushEndCoord == NULL)){
-
-		int normalizedX = brushEndCoord->x - brushStartCoord->x;
-		int normalizedY = -(brushEndCoord->y - brushStartCoord->y);
-
-		int angle = atan2((float)normalizedY, (float)normalizedX) * 180 / M_PI;
-		if (angle >= 0){
-
-			return angle;
-		}
-		else{
-			return angle + 360;
-		}
-	}
-	else{
-		return -1;
-	}
 }

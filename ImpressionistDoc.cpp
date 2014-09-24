@@ -139,9 +139,9 @@ int ImpressionistDoc::getLineAngle()
 //-------------------------------------------------
 // Set the line angle
 //-------------------------------------------------
-void ImpressionistDoc::setLineAngle(int lineAngle, int brushStrokeDirectionType)
+void ImpressionistDoc::setLineAngle(int lineAngle)
 {
-	m_pUI->setLineAngle(lineAngle, brushStrokeDirectionType);
+	m_pUI->setLineAngle(lineAngle);
 }
 
 //---------------------------------------------------------
