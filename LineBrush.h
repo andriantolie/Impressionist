@@ -25,7 +25,7 @@ public:
 	int calculateAngle(const int startX, const int startY, const int endX, const int endY);
 	int getGradientX(const Point source);
 	int getGradientY(const Point source);
-	unsigned char getPixelIntensity(const int x, const int y);
+	double getPixelIntensity(const int x, const int y);
 	char* BrushName(void);
 };
 

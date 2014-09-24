@@ -139,13 +139,13 @@ int LineBrush::getGradientX(const Point source){
 		{-2, 0, 2},
 		{-1, 0, 1}
 	};
-	int gradientX = 0;
+	double gradientX = 0;
 	for (int i = 0; i < 3; i++){
 		for (int j = 0; j < 3; j++){
 			gradientX += sobelX[i][j] * getPixelIntensity(source.x + j - 1, source.y - i + 1 );
 		}
 	}
-	return gradientX;
+	return (int)gradientX;
 
 }
 
@@ -158,22 +158,23 @@ int LineBrush::getGradientY(const Point source){
 		{ 0, 0, 0 },
 		{ -1, -2, -1 }
 	};
-	int gradientY = 0;
+	double gradientY = 0;
 	for (int i = 0; i < 3; i++){
 		for (int j = 0; j < 3; j++){
 			gradientY += sobelY[i][j] * getPixelIntensity(source.x + j - 1, source.y - i + 1);
 		}
 	}
-	return gradientY;
+	return (int)gradientY;
 
 }
 
-//get intensity of a pixel, we use average of rgb in this case
-unsigned char LineBrush::getPixelIntensity(int x, int y){
+//get intensity of a pixel
+//we define intensity as relative luminance, i.e. Y = 0.2126 R + 0.7152 G + 0.0722 B
+double LineBrush::getPixelIntensity(int x, int y){
 	ImpressionistDoc* pDoc = GetDocument();
 	unsigned char color[3];
 	memcpy(color, pDoc->GetOriginalPixel(x, y), 3);
-	return (color[0] + color[1] + color[2]) / 3;
+	return (0.2126*color[0] + 0.7152*color[1] + 0.0722*color[2]);
 
 }
 
