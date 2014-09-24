@@ -32,6 +32,7 @@ public:
 	void	setLineWidth(int lineWidth);				// set the UI lineWidth
 	int		getLineAngle();						// get the UI lineAngle
 	void	setLineAngle(int lineAngle);				// set the UI lineAngle
+	float	getAlpha();
 
 	char*	getImageName();					// get the current image name
 	

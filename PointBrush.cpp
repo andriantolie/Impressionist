@@ -23,7 +23,8 @@ void PointBrush::BrushBegin( const Point source, const Point target )
 
 	int size = pDoc->getSize();
 
-
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glPointSize( (float)size );
 
@@ -51,5 +52,7 @@ void PointBrush::BrushMove( const Point source, const Point target )
 void PointBrush::BrushEnd( const Point source, const Point target )
 {
 	// do nothing so far
+	glBlendFunc(GL_NONE, GL_NONE);
+	glDisable(GL_BLEND);
 }
 

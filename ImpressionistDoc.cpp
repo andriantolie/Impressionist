@@ -18,7 +18,7 @@
 #include "LineBrush.h"
 #include "ScatteredPointBrush.h"
 #include "ScatteredLineBrush.h"
-
+#include "ScatteredCircleBrush.h"
 
 #define DESTROY(p)	{  if ((p)!=NULL) {delete [] p; p=NULL; } }
 
@@ -48,7 +48,7 @@ ImpressionistDoc::ImpressionistDoc()
 	ImpBrush::c_pBrushes[BRUSH_SCATTERED_LINES]		
 		= new ScatteredLineBrush( this, "Scattered Lines" );
 	ImpBrush::c_pBrushes[BRUSH_SCATTERED_CIRCLES]	
-		= new PointBrush( this, "Scattered Circles" );
+		= new ScatteredCircleBrush( this, "Scattered Circles" );
 
 	// make one of the brushes current
 	m_pCurrentBrush	= ImpBrush::c_pBrushes[0];
@@ -142,6 +142,11 @@ int ImpressionistDoc::getLineAngle()
 void ImpressionistDoc::setLineAngle(int lineAngle)
 {
 	m_pUI->setLineAngle(lineAngle);
+}
+
+// Get the alpha value
+float ImpressionistDoc::getAlpha() {
+	return m_pUI->getAlpha();
 }
 
 //---------------------------------------------------------

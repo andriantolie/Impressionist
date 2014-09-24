@@ -77,6 +77,8 @@ public:
 	int					getLineAngle();
 	void				setLineAngle(int lineAngle);
 
+	float				getAlpha();
+
 
 
 private:
@@ -86,7 +88,7 @@ private:
 	int		m_nSize;
 	int 	m_nLineWidth;
 	int 	m_nLineAngle;
-	double	m_nAlpha;
+	float	m_nAlpha;
 	bool	IsEdgeClipping;
 	bool 	IsAnotherGradient;
 	int 	m_nSpacing;
