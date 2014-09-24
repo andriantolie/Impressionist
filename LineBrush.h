@@ -22,6 +22,10 @@ public:
 	void BrushEnd(const Point source, const Point target);
 	void drawLine(const Point source, const Point target, const int lineSize, const int lineAngle);
 	int getBrushDirection();
+	int calculateAngle(const int startX, const int startY, const int endX, const int endY);
+	int getGradientX(const Point source);
+	int getGradientY(const Point source);
+	unsigned char getPixelIntensity(const int x, const int y);
 	char* BrushName(void);
 };
 

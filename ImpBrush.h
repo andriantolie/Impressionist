@@ -8,6 +8,9 @@
 //
 
 #include <stdlib.h>
+#include <iostream>
+#include <math.h>
+using namespace std;
 
 // Each brush type has an associated constant.
 enum

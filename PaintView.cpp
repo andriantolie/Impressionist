@@ -9,6 +9,7 @@
 #include "impressionistUI.h"
 #include "paintview.h"
 #include "ImpBrush.h"
+#include "RightClickStroke.h"
 #include <math.h>
 
 #define LEFT_MOUSE_DOWN		1
@@ -118,10 +119,19 @@ void PaintView::draw()
 			RestoreContent();
 			break;
 		case RIGHT_MOUSE_DOWN:
+			SaveCurrentContent();
+			rightClickStroke = new RightClickStroke(m_pDoc, "Right Click Stroke");
+			rightClickStroke->BrushBegin(source, target);
 			break;
 		case RIGHT_MOUSE_DRAG:
+			RestoreContent();
+			rightClickStroke->BrushMove(source, target);
 			break;
 		case RIGHT_MOUSE_UP:
+			rightClickStroke->BrushEnd(source, target);
+			delete rightClickStroke;
+			rightClickStroke = NULL;
+			RestoreContent();
 			break;
 
 		default:

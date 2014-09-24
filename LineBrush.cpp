@@ -42,31 +42,49 @@ void LineBrush::BrushMove(const Point source, const Point target)
 		return;
 	}
 
+
 	//set line angle according to brush direction
 	if (dlg->m_StrokeDirectionChoice->value() == BRUSH_DIRECTION){
-		//set up brush end coodinate - for brush direction
-		brushEndCoord = new Point(target.x, target.y);
-		int brushDirection = getBrushDirection();
-		pDoc->setLineAngle(brushDirection);
-		//setup new value for brush start
-		delete brushStartCoord;
-		brushStartCoord = brushEndCoord;
+		if (brushEndCoord == NULL){
+			brushEndCoord = new Point(target.x, target.y);
+		}
+		else{
+			//set up brush end coodinate - for brush direction
+			brushEndCoord = new Point(target.x, target.y);
+			int brushDirection = calculateAngle(brushStartCoord->x, brushStartCoord->y, brushEndCoord->x, brushEndCoord->y);
+			pDoc->setLineAngle(brushDirection);
+			//setup new value for brush start
+			delete brushStartCoord;
+			brushStartCoord = brushEndCoord;
+		}
+
+	}
+	else if (dlg->m_StrokeDirectionChoice->value() == GRADIENT){
+		int gradientX = getGradientX(source);
+		int gradientY = getGradientY(source);
+		int gradientAngle = calculateAngle(0, 0, gradientX, gradientY);
+		int perpendicularToGradient = gradientAngle + 90;
+		if (perpendicularToGradient >= 360) perpendicularToGradient -= 180;
+		pDoc->setLineAngle(perpendicularToGradient);
 	}
 
-	int lineSize = pDoc->getSize();
-	int lineAngle = pDoc->getLineAngle();
 
-	if(lineAngle != - 1) drawLine(source, target, lineSize, lineAngle);
+	int lineAngle = pDoc->getLineAngle();
+	int lineSize = pDoc->getSize();
+
+	drawLine(source, target, lineSize, lineAngle);
 }
 
 void LineBrush::BrushEnd(const Point source, const Point target)
 {
-	//// remove brush start and end coordinate from the heap
+	// remove brush start and end coordinate from the heap
+	//brushStart Coord and brushEndCoord previously pointed to the same value so we only need to delete brushStartCoord
 	delete brushStartCoord;
 	brushStartCoord = NULL;
-	brushEndCoord = NULL; //brushStart Coord and brushEndCoord previously pointed to the same value so we only need to delete brushStartCoord
+	brushEndCoord = NULL; 
 }
 
+//draw line using opengl
 void LineBrush::drawLine(const Point source, const Point target, const int lineSize, const int lineAngle){
 	if (lineAngle >= 0 && lineAngle < 360){
 		int startX = target.x - (lineSize / 2) * cos(lineAngle * M_PI / 180);
@@ -85,23 +103,77 @@ void LineBrush::drawLine(const Point source, const Point target, const int lineS
 
 	}
 }
+
+//get direction of the brush stroke
 int LineBrush::getBrushDirection(){
-
 	if (!(brushStartCoord == NULL || brushEndCoord == NULL)){
-
-		int normalizedX = brushEndCoord->x - brushStartCoord->x;
-		int normalizedY = (brushEndCoord->y - brushStartCoord->y);
-
-		int angle = atan2((float)normalizedY, (float)normalizedX) * 180 / M_PI;
-		if (angle >= 0){
-			return angle;
-		}
-		else{
-			return angle + 360;
-		}
+		ImpressionistDoc* pDoc = GetDocument();
+		int height = pDoc->m_nHeight;
+		return calculateAngle(brushStartCoord->x, height - brushStartCoord->y, brushEndCoord->x, height - brushEndCoord->y);
 	}
 	else{
 		return -1; //denotes invalid value
 	}
+}
+
+//calculate angle given two points
+int LineBrush::calculateAngle(const int startX, const int startY, const int endX, const int endY){
+	int normalizedX = endX - startX;
+	int normalizedY = endY - startY;
+
+	int angle = atan2((float)normalizedY, (float)normalizedX) * 180 / M_PI;
+	if (angle >= 0){
+		return angle;
+	}
+	else{
+		return angle + 360;
+	}
+}
+
+//Calculate gradient in X direction
+int LineBrush::getGradientX(const Point source){
+	ImpressionistDoc* pDoc = GetDocument();
+	int sobelX[3][3] = 
+	{
+		{-1, 0, 1},
+		{-2, 0, 2},
+		{-1, 0, 1}
+	};
+	int gradientX = 0;
+	for (int i = 0; i < 3; i++){
+		for (int j = 0; j < 3; j++){
+			gradientX += sobelX[i][j] * getPixelIntensity(source.x + j - 1, source.y - i + 1 );
+		}
+	}
+	return gradientX;
+
+}
+
+//Calculate gradient in Y direction
+int LineBrush::getGradientY(const Point source){
+	ImpressionistDoc* pDoc = GetDocument();
+	int sobelY[3][3] =
+	{
+		{ 1, 2, 1 },
+		{ 0, 0, 0 },
+		{ -1, -2, -1 }
+	};
+	int gradientY = 0;
+	for (int i = 0; i < 3; i++){
+		for (int j = 0; j < 3; j++){
+			gradientY += sobelY[i][j] * getPixelIntensity(source.x + j - 1, source.y - i + 1);
+		}
+	}
+	return gradientY;
+
+}
+
+//get intensity of a pixel, we use average of rgb in this case
+unsigned char LineBrush::getPixelIntensity(int x, int y){
+	ImpressionistDoc* pDoc = GetDocument();
+	unsigned char color[3];
+	memcpy(color, pDoc->GetOriginalPixel(x, y), 3);
+	return (color[0] + color[1] + color[2]) / 3;
+
 }
 

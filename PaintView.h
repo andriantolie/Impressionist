@@ -33,6 +33,7 @@ public:
 	ImpressionistDoc *m_pDoc;
 
 private:
+	ImpBrush* rightClickStroke;
 	GLvoid* m_pPaintBitstart;
 	int		m_nDrawWidth,
 			m_nDrawHeight,
