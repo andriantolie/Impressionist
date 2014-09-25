@@ -28,6 +28,7 @@
 static int		eventToDo;
 static int		isAnEvent=0;
 static Point	coord;
+static int      index = 0;
 
 
 PaintView::PaintView(int			x, 
@@ -96,47 +97,48 @@ void PaintView::draw()
 
 	if ( m_pDoc->m_ucPainting && isAnEvent) 
 	{
+		if (coord.x <= m_nDrawWidth && coord.y <= m_nDrawHeight){
+			// Clear it after processing.
+			isAnEvent = 0;
 
-		// Clear it after processing.
-		isAnEvent	= 0;	
+			Point source(coord.x + m_nStartCol, m_nEndRow - coord.y);
+			Point target(coord.x, m_nWindowHeight - coord.y);
 
-		Point source( coord.x + m_nStartCol, m_nEndRow - coord.y );
-		Point target( coord.x, m_nWindowHeight - coord.y );
-		
-		// This is the event handler
-		switch (eventToDo) 
-		{
-		case LEFT_MOUSE_DOWN:
-			m_pDoc->m_pCurrentBrush->BrushBegin( source, target );
-			break;
-		case LEFT_MOUSE_DRAG:
-			m_pDoc->m_pCurrentBrush->BrushMove( source, target );
-			break;
-		case LEFT_MOUSE_UP:
-			m_pDoc->m_pCurrentBrush->BrushEnd( source, target );
+			// This is the event handler
+			switch (eventToDo)
+			{
+			case LEFT_MOUSE_DOWN:
+				m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
+				break;
+			case LEFT_MOUSE_DRAG:
+				m_pDoc->m_pCurrentBrush->BrushMove(source, target);
+				break;
+			case LEFT_MOUSE_UP:
+				m_pDoc->m_pCurrentBrush->BrushEnd(source, target);
 
-			SaveCurrentContent();
-			RestoreContent();
-			break;
-		case RIGHT_MOUSE_DOWN:
-			SaveCurrentContent();
-			rightClickStroke = new RightClickStroke(m_pDoc, "Right Click Stroke");
-			rightClickStroke->BrushBegin(source, target);
-			break;
-		case RIGHT_MOUSE_DRAG:
-			RestoreContent();
-			rightClickStroke->BrushMove(source, target);
-			break;
-		case RIGHT_MOUSE_UP:
-			rightClickStroke->BrushEnd(source, target);
-			delete rightClickStroke;
-			rightClickStroke = NULL;
-			RestoreContent();
-			break;
+				SaveCurrentContent();
+				RestoreContent();
+				break;
+			case RIGHT_MOUSE_DOWN:
+				SaveCurrentContent();
+				rightClickStroke = new RightClickStroke(m_pDoc, "Right Click Stroke");
+				rightClickStroke->BrushBegin(source, target);
+				break;
+			case RIGHT_MOUSE_DRAG:
+				RestoreContent();
+				rightClickStroke->BrushMove(source, target);
+				break;
+			case RIGHT_MOUSE_UP:
+				rightClickStroke->BrushEnd(source, target);
+				delete rightClickStroke;
+				rightClickStroke = NULL;
+				RestoreContent();
+				break;
 
-		default:
-			printf("Unknown event!!\n");		
-			break;
+			default:
+				printf("Unknown event!!\n");
+				break;
+			}
 		}
 	}
 
@@ -196,6 +198,9 @@ int PaintView::handle(int event)
 	case FL_MOVE:
 		coord.x = Fl::event_x();
 		coord.y = Fl::event_y();
+		cout << coord.x << endl;
+		cout << coord.y << endl;
+		cout << endl;
 		break;
 	default:
 		return 0;
