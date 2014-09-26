@@ -208,6 +208,12 @@ void ImpressionistUI::cb_brushes(Fl_Menu_* o, void* v)
 	whoami(o)->m_brushDialog->show();
 }
 
+//TODO
+void ImpressionistUI::cb_colors(Fl_Menu_* o, void* v)
+{
+	whoami(o)->m_colorDialog->show();
+}
+
 //------------------------------------------------------------
 // Clears the paintview canvas.
 // Called by the UI when the clear canvas menu item is chosen
@@ -370,7 +376,6 @@ void ImpressionistUI::cb_sizeRandomButton(Fl_Widget* o, void* v)
 void ImpressionistUI::cb_paintButton(Fl_Widget* o, void* v)
 {
 	ImpressionistUI *pUI = ((ImpressionistUI*)(o->user_data()));
-	pUI->m_paintView->automaticDraw();
 }
 
 // Updates the edge threshold slider
@@ -383,6 +388,17 @@ void ImpressionistUI::cb_doItButton(Fl_Widget* o, void* v)
 {
 	return;
 }
+
+// Change the color blend value
+void ImpressionistUI::cb_colorSelector(Fl_Widget* o, void* v)
+{
+	ImpressionistUI *pUI = ((ImpressionistUI*)(o->user_data()));
+	pUI->m_colorBlend[0] = float(((Fl_Color_Chooser *)o)->r());
+	pUI->m_colorBlend[1] = float(((Fl_Color_Chooser *)o)->g());
+	pUI->m_colorBlend[2] = float(((Fl_Color_Chooser *)o)->b());
+}
+
+
 
 //---------------------------------- per instance functions --------------------------------------
 
@@ -485,12 +501,16 @@ float ImpressionistUI::getAlpha() {
 	return m_nAlpha;
 }
 
+float* ImpressionistUI::getColorBlend(){
+	return m_colorBlend;
+}
 // Main menu definition
 Fl_Menu_Item ImpressionistUI::menuitems[] = {
 	{ "&File",		0, 0, 0, FL_SUBMENU },
 		{ "&Load Image...",	FL_ALT + 'l', (Fl_Callback *)ImpressionistUI::cb_load_image },
 		{ "&Save Image...",	FL_ALT + 's', (Fl_Callback *)ImpressionistUI::cb_save_image },
 		{ "&Brushes...",	FL_ALT + 'b', (Fl_Callback *)ImpressionistUI::cb_brushes }, 
+		{ "&Colors...", FL_ALT + 'r', (Fl_Callback *)ImpressionistUI::cb_colors },
 		{ "&Clear Canvas", FL_ALT + 'c', (Fl_Callback *)ImpressionistUI::cb_clear_canvas, 0, FL_MENU_DIVIDER },
 		
 		{ "&Quit",			FL_ALT + 'q', (Fl_Callback *)ImpressionistUI::cb_exit },
@@ -573,6 +593,9 @@ ImpressionistUI::ImpressionistUI() {
 	m_nSpacing = 4;
 	IsSizeRandom = TRUE;
 	m_nEdgeThreshold = 200;
+	m_colorBlend[0] = 1.0;
+	m_colorBlend[1] = 1.0;
+	m_colorBlend[2] = 1.0;
 
 	// brush dialog definition
 	m_brushDialog = new Fl_Window(410, 335, "Brush Dialog");
@@ -716,7 +739,18 @@ ImpressionistUI::ImpressionistUI() {
 		m_DoItGroup->add(m_EdgeThresholdSlider);
 		m_DoItGroup->add(m_DoItButton);
 
+
     m_brushDialog->end();	
+
+	//set color dialog
+	m_colorDialog = new Fl_Window(200, 250, "Color Selector");
+	    m_ColorSelector = new Fl_Color_Chooser(0, 0, 200, 250, "Color Selector");
+		m_ColorSelector->user_data((void*)this);
+		m_ColorSelector->rgb(1.0, 1.0, 1.0);
+		m_ColorSelector->callback(cb_colorSelector);
+	m_colorDialog->end();
+
+
 
 }
 

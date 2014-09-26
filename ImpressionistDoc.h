@@ -33,6 +33,7 @@ public:
 	int		getLineAngle();						// get the UI lineAngle
 	void	setLineAngle(int lineAngle);				// set the UI lineAngle
 	float	getAlpha();
+	float*    getColorBlend();				//get color blend value
 
 	char*	getImageName();					// get the current image name
 	

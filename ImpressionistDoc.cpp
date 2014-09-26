@@ -152,6 +152,11 @@ float ImpressionistDoc::getAlpha() {
 	return m_pUI->getAlpha();
 }
 
+// Get the colorBlend value
+float* ImpressionistDoc::getColorBlend() {
+	return m_pUI->getColorBlend();
+}
+
 //---------------------------------------------------------
 // Load the specified image
 // This is called by the UI when the load image button is 
