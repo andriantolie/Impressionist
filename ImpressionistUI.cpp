@@ -399,7 +399,9 @@ void ImpressionistUI::cb_colorSelector(Fl_Widget* o, void* v)
 	pUI->m_colorBlend[2] = float(((Fl_Color_Chooser *)o)->b());
 }
 
+void ImpressionistUI::cb_swap_content(Fl_Widget* o, void* v) {
 
+}
 
 //---------------------------------- per instance functions --------------------------------------
 
@@ -531,6 +533,7 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
 		{ "&Save Image...",	FL_ALT + 's', (Fl_Callback *)ImpressionistUI::cb_save_image },
 		{ "&Brushes...",	FL_ALT + 'b', (Fl_Callback *)ImpressionistUI::cb_brushes }, 
 		{ "&Colors...", FL_ALT + 'r', (Fl_Callback *)ImpressionistUI::cb_colors },
+		{ "Swap content", FL_ALT + 'w', (Fl_Callback *) ImpressionistUI::cb_swap_content },
 		{ "&Clear Canvas", FL_ALT + 'c', (Fl_Callback *)ImpressionistUI::cb_clear_canvas, 0, FL_MENU_DIVIDER },
 		
 		{ "&Quit",			FL_ALT + 'q', (Fl_Callback *)ImpressionistUI::cb_exit },

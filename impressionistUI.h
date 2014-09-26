@@ -139,7 +139,7 @@ private:
 	static void cb_paintButton(Fl_Widget* o, void* v);
 	static void cb_edgeThresholdSlides(Fl_Widget* o, void* v);
 	static void cb_doItButton(Fl_Widget* o, void* v);
-
+	static void cb_swap_content(Fl_Widget* o, void* v);
 	static void cb_colorSelector(Fl_Widget * o, void* v);
 
 };
