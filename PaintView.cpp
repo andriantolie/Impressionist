@@ -270,7 +270,7 @@ void PaintView::automaticDraw(){
 #ifndef MESA
 	// To avoid flicker on some machines.
 	glDrawBuffer(GL_FRONT_AND_BACK);
-#endif // !MESA
+#endif // !MESA 
 	if (!valid())
 	{
 
