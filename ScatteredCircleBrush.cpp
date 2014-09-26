@@ -5,7 +5,6 @@
 #include "ImpressionistUI.h"
 #include "ImpressionistDOC.h"
 #include "ScatteredCircleBrush.h"
-#include <time.h>
 
 extern float frand();
 
@@ -21,11 +20,10 @@ void ScatteredCircleBrush::BrushBegin(const Point source, const Point target)
 	int size = pDoc->getSize();
 
 
+	glPointSize( float (size) );
 
-	glPointSize( (float)size );
-
-//	glEnable(GL_ALPHA_TEST);
-//	glAlphaFunc(GL_NOTEQUAL, 0);
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_NOTEQUAL, 0);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_POINT_SMOOTH);
@@ -46,12 +44,15 @@ void ScatteredCircleBrush::BrushMove(const Point source, const Point target)
 
 	int size = pDoc->getSize();
 	//set random target coordinates
-	srand(time(NULL));
-	int numOfPoints = rand() % size + 1;
+	//srand(time(NULL));
+	int numOfPoints = rand() % 4 + 1;
 	glBegin( GL_POINTS );
-	for (int i = 0; i < numOfPoints; i++){
-		int xDisplacement = rand() % (size/2) * 2 + 1;
-		int yDisplacement = rand() % (size/2) * 2 + 1;
+
+	SetColor(source);
+	glVertex2d(target.x, target.y);
+	for (int i = 0; i < numOfPoints-1; i++){
+		int xDisplacement = rand() % size + 1;
+		int yDisplacement = rand() % size + 1;
 		Point newSource(source.x + xDisplacement, source.y + yDisplacement);
 		Point newTarget(target.x + xDisplacement, target.y + yDisplacement);
 

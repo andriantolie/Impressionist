@@ -599,7 +599,7 @@ ImpressionistUI::ImpressionistUI() {
 
 	// brush dialog definition
 	m_brushDialog = new Fl_Window(410, 335, "Brush Dialog");
-		// Add a brush type choice to the dialog
+	// Add a brush type choice to the dialog
 		m_BrushTypeChoice = new Fl_Choice(50,10,150,25,"&Brush");
 		m_BrushTypeChoice->user_data((void*)(this));	// record self to be used by static callback functions
 		m_BrushTypeChoice->menu(brushTypeMenu);
