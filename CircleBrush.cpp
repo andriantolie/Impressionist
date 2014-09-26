@@ -23,8 +23,7 @@ void CircleBrush::BrushBegin (const Point source, const Point target) {
 	//glAlphaFunc(GL_NOTEQUAL, 0);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_POINT_SMOOTH);
-	glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
+	
 
 	BrushMove(source, target);
 }
@@ -34,21 +33,23 @@ void CircleBrush::BrushMove (const Point source, const Point target) {
 	ImpressionistUI* dlg=pDoc->m_pUI;
 
 	if ( pDoc == NULL ) {
-		printf( "PointBrush::BrushMove document is NULL\n" );
+		printf( "CircleBrush::BrushMove document is NULL\n" );
 		return;
 	}
-
-	glBegin( GL_POINTS );
+	int size = pDoc->getSize();
+	int radius = size / 2;
+	glBegin( GL_TRIANGLE_FAN );
 		SetColor( source );
 
-		glVertex2d( target.x, target.y );
+		for (double i = 0; i < 2*M_PI; i+=0.1){
+			glVertex2d(target.x + radius*cos(i), target.y + radius*sin(i));
+		}
 
 	glEnd();
 }
 
 void CircleBrush::BrushEnd (const Point source, const Point target) {
-	// Do nothing for now
-	glDisable(GL_POINT_SMOOTH);
 	glBlendFunc(GL_NONE, GL_NONE);
 	glDisable(GL_BLEND);
+
 }

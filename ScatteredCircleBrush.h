@@ -6,10 +6,10 @@
 #ifndef SCATTEREDCIRCLEBRUSH_H
 #define SCATTEREDCIRCLEBURSH_H
 
- #include "ImpBrush.h"
+ #include "CircleBrush.h"
  #include "CircleBrush.h"
 
- class ScatteredCircleBrush : public ImpBrush {
+ class ScatteredCircleBrush : public CircleBrush {
  public:
  	ScatteredCircleBrush(ImpressionistDoc* pDoc = NULL, char* name = NULL);
 

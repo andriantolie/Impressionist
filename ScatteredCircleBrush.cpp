@@ -9,7 +9,7 @@
 extern float frand();
 
 ScatteredCircleBrush::ScatteredCircleBrush(ImpressionistDoc* pDoc, char* name) :
-ImpBrush(pDoc, name) {
+CircleBrush(pDoc, name) {
 }
 
 void ScatteredCircleBrush::BrushBegin(const Point source, const Point target)
@@ -26,8 +26,6 @@ void ScatteredCircleBrush::BrushBegin(const Point source, const Point target)
 	glAlphaFunc(GL_NOTEQUAL, 0);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_POINT_SMOOTH);
-	glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
 	BrushMove(source, target);
 
 }
@@ -46,29 +44,20 @@ void ScatteredCircleBrush::BrushMove(const Point source, const Point target)
 	//set random target coordinates
 	//srand(time(NULL));
 	int numOfPoints = rand() % 4 + 1;
-	glBegin( GL_POINTS );
 
-	SetColor(source);
-	glVertex2d(target.x, target.y);
-	for (int i = 0; i < numOfPoints-1; i++){
+	for (int i = 0; i < numOfPoints; i++){
 		int xDisplacement = rand() % (size/2) + 1;
 		int yDisplacement = rand() % (size/2) + 1;
 		Point newSource(source.x + xDisplacement, source.y + yDisplacement);
 		Point newTarget(target.x + xDisplacement, target.y + yDisplacement);
+		CircleBrush::BrushMove(newSource, newTarget);
 
-		
-			SetColor( newSource );
-
-			glVertex2d( newTarget.x, newTarget.y );
-	
 	}
-	glEnd();
 
 }
 
 void ScatteredCircleBrush::BrushEnd(const Point source, const Point target)
 {
-	glDisable(GL_POINT_SMOOTH);
 	glBlendFunc(GL_NONE, GL_NONE);
 	glDisable(GL_BLEND);
 }
