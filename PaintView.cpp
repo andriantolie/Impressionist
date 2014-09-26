@@ -18,7 +18,7 @@
 #define RIGHT_MOUSE_DOWN	4
 #define RIGHT_MOUSE_DRAG	5
 #define RIGHT_MOUSE_UP		6
-
+#define MOUSE_MOVE			7
 
 #ifndef WIN32
 #define min(a, b)	( ( (a)<(b) ) ? (a) : (b) )
@@ -132,7 +132,6 @@ void PaintView::draw()
 				rightClickStroke = NULL;
 				RestoreContent();
 				break;
-
 			default:
 				printf("Unknown event!!\n");
 				break;
@@ -152,6 +151,8 @@ void PaintView::draw()
 
 int PaintView::handle(int event)
 {
+	ImpressionistUI* ui = m_pDoc->m_pUI;
+
 	switch (event)
 	{
 	case FL_ENTER:
@@ -178,6 +179,10 @@ int PaintView::handle(int event)
 		else{
 			eventToDo = LEFT_MOUSE_DRAG;
 		}
+		ui->m_origView->isMoving = true;
+		ui->m_origView->cursor.x = coord.x;
+		ui->m_origView->cursor.y = m_pDoc->m_nPaintHeight - coord.y;
+		ui->m_origView->redraw();
 		isAnEvent=1;
 		redraw();
 		break;
@@ -196,6 +201,10 @@ int PaintView::handle(int event)
 	case FL_MOVE:
 		coord.x = Fl::event_x();
 		coord.y = Fl::event_y();
+		ui->m_origView->isMoving = true;
+		ui->m_origView->cursor.x = coord.x;
+		ui->m_origView->cursor.y = m_pDoc->m_nPaintHeight - coord.y;
+		ui->m_origView->redraw();
 		break;
 	default:
 		return 0;

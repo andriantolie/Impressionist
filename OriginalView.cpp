@@ -42,7 +42,7 @@ void OriginalView::draw()
 
 	glClear( GL_COLOR_BUFFER_BIT );
 
-	if ( m_pDoc->m_ucBitmap ) 
+	if ( m_pDoc->m_ucBitmap)// && !isMoving) 
 	{
 		// note that both OpenGL pixel storage and the Windows BMP format
 		// store pixels left-to-right, BOTTOM-to-TOP!!  thus all the fiddling
@@ -76,6 +76,14 @@ void OriginalView::draw()
 		glDrawPixels( drawWidth, drawHeight, GL_RGB, GL_UNSIGNED_BYTE, bitstart );
 
 	}
+
+	if (isMoving) {
+		glPointSize(5);
+		glColor3f(1.0f, 0.0f, 0.0f);
+		glBegin(GL_POINTS);
+		glVertex2f(cursor.x, cursor.y);
+		glEnd();
+	}
 			
 	glFlush();
 }
@@ -84,6 +92,7 @@ void OriginalView::refresh()
 {
 	redraw();
 }
+
 
 void OriginalView::resizeWindow(int	width, 
 								int	height)

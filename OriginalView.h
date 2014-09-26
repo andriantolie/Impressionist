@@ -24,10 +24,11 @@ class OriginalView : public Fl_Gl_Window
 {
 public:
 	OriginalView(int x, int y, int w, int h, const char *l);
-	
+
+	bool isMoving = false;
+	Point cursor;
 	void draw();
 	void refresh();
-
 	void resizeWindow(int width, int height);
 
 	ImpressionistDoc*	m_pDoc;
