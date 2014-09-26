@@ -498,12 +498,31 @@ void ImpressionistUI::setLineAngle(int lineAngle)
 	
 }
 
+//------------------------------------------------
+// Return the alpha value
+//------------------------------------------------
 float ImpressionistUI::getAlpha() {
 	return m_nAlpha;
 }
 
+//------------------------------------------------
+// Return the color blend value
+//------------------------------------------------
 float* ImpressionistUI::getColorBlend(){
 	return m_colorBlend;
+}
+//------------------------------------------------
+// Return the spacing
+//------------------------------------------------
+
+int	ImpressionistUI::getSpacing(){
+	return m_nSpacing;
+}
+//------------------------------------------------
+// Return the randomness of size
+//------------------------------------------------
+bool ImpressionistUI::getSizeRandomness(){
+	return IsSizeRandom;
 }
 // Main menu definition
 Fl_Menu_Item ImpressionistUI::menuitems[] = {

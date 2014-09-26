@@ -11,7 +11,7 @@
 #include "ImpBrush.h"
 #include "RightClickStroke.h"
 #include <math.h>
-
+#include <algorithm>  
 #define LEFT_MOUSE_DOWN		1
 #define LEFT_MOUSE_DRAG		2
 #define LEFT_MOUSE_UP		3
@@ -95,6 +95,7 @@ void PaintView::draw()
 	}
 	if ( m_pDoc->m_ucPainting && isAnEvent) 
 	{
+		int brushSize = m_pDoc->getSize();
 		if (coord.x <= m_nDrawWidth && coord.y <= m_nDrawHeight){
 			// Clear it after processing.
 			isAnEvent = 0;
@@ -310,30 +311,49 @@ void PaintView::automaticDraw(){
 	m_nEndCol = m_nStartCol + drawWidth;
 	
 	int origSize = m_pDoc->getSize();
-	int numOfPoints = (drawWidth / 2) * (drawHeight / 2);
-	for (int i = 0; i < numOfPoints; i++){
-		int x = rand() % drawWidth ;
-		int y = rand() % drawHeight ;
-		int modifiedSize = (origSize + (-1 * rand() % 2) * (rand() % (origSize / 4))) % 40 + 1;
-		m_pDoc->setSize(modifiedSize);
-		Point source(x + m_nStartCol, m_nEndRow - y);
-		Point target(x, m_nWindowHeight - y);
+	int spacing = m_pDoc->getSpacing();
+	bool randomness = m_pDoc->getSizeRandomness();
+	int numOfXPoints = drawWidth/spacing;
+	int numOfYPoints = drawHeight/spacing;
+	int numOfPoints = numOfXPoints*numOfYPoints / 4;
 
-		if (i == 0){
-			m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
+	int* xCoords = new int[numOfXPoints];
+	for (int index = 0; index < numOfXPoints; index++){
+		xCoords[index] = index;
+	}
+	std::random_shuffle(&xCoords[0], &xCoords[numOfXPoints]);
+	for (int i = 0; i < numOfXPoints; i++){
+		int* yCoords = new int[numOfYPoints];
+		for (int index = 0; index < numOfYPoints; index++){
+			yCoords[index] = index;
 		}
-		else if (x == numOfPoints - 1){
-			m_pDoc->m_pCurrentBrush->BrushEnd(source, target);
+		std::random_shuffle(&yCoords[0], &yCoords[numOfYPoints]);
+		for (int j = 0; j < numOfYPoints; j++){
+			int x = xCoords[i] * spacing;
+			int y = yCoords[j] * spacing;
+			int modifiedSize = origSize;
+			if (randomness) modifiedSize = (origSize + (-1 * rand() % 2) * (rand() % (origSize / 4))) % 40 + 1;
+			m_pDoc->setSize(modifiedSize);
+			Point source(x + m_nStartCol, m_nEndRow - y);
+			Point target(x, m_nWindowHeight - y);
+
+			if (i == 0){
+				m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
+			}
+			else if (x == -1){
+				m_pDoc->m_pCurrentBrush->BrushEnd(source, target);
+			}
+			else {
+				m_pDoc->m_pCurrentBrush->BrushMove(source, target);
+			}
+			m_pDoc->setSize(origSize);
 		}
-		else {
-			m_pDoc->m_pCurrentBrush->BrushMove(source, target);
-		}
-		m_pDoc->setSize(origSize);
 	}
 
 	glFlush();
 	SaveCurrentContent();
-
+	m_pDoc->m_pUI->m_origView->redraw();
+	redraw();
 #ifndef MESA
 	// To avoid flicker on some machines.
 	glDrawBuffer(GL_BACK);
