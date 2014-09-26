@@ -6,6 +6,8 @@
 // They do have a link to each other as their member such that they can 
 // communicate.
 //
+//Author:	LIE, Andrianto (alie@connect.ust.hk) - 20020408
+//			ZENG, Xiong (zxengac@connect.ust.hk) - 20025056
 
 #include <stdio.h>
 
