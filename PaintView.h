@@ -29,6 +29,7 @@ public:
 	void SaveCurrentContent();
 
 	void RestoreContent();
+	void automaticDraw();
 	ImpressionistDoc *m_pDoc;
 
 private:

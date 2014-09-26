@@ -41,7 +41,7 @@ void ScatteredPointBrush::BrushMove(const Point source, const Point target)
 
 	int size = pDoc->getSize();
 	//set random target coordinates
-	srand(time(NULL));
+	//srand(time(NULL));
 	int numOfPoints = rand() % (size/2)*(size/2) + 1;
 	for (int i = 0; i < numOfPoints; i++){
 		int xDisplacement = rand() % size;

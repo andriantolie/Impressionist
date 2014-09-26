@@ -39,7 +39,7 @@ void ScatteredLineBrush::BrushMove(const Point source, const Point target)
 
 	int size = pDoc->getSize();
 	//set random target coordinates
-	srand(time(NULL));
+	//srand(time(NULL));
 	int numOfLines = rand() % 10 + 1;
 	for (int i = 0; i < numOfLines; i++){
 		int xDisplacement = rand() % size;

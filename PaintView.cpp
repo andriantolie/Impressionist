@@ -50,7 +50,6 @@ void PaintView::draw()
 	// To avoid flicker on some machines.
 	glDrawBuffer(GL_FRONT_AND_BACK);
 	#endif // !MESA
-
 	if(!valid())
 	{
 
@@ -94,7 +93,6 @@ void PaintView::draw()
 		RestoreContent();
 
 	}
-
 	if ( m_pDoc->m_ucPainting && isAnEvent) 
 	{
 		if (coord.x <= m_nDrawWidth && coord.y <= m_nDrawHeight){
@@ -198,9 +196,6 @@ int PaintView::handle(int event)
 	case FL_MOVE:
 		coord.x = Fl::event_x();
 		coord.y = Fl::event_y();
-		cout << coord.x << endl;
-		cout << coord.y << endl;
-		cout << endl;
 		break;
 	default:
 		return 0;
@@ -236,7 +231,7 @@ void PaintView::SaveCurrentContent()
 				  m_nWindowHeight - m_nDrawHeight, 
 				  m_nDrawWidth, 
 				  m_nDrawHeight, 
-				  GL_RGB, 
+				  GL_RGB,
 				  GL_UNSIGNED_BYTE, 
 				  m_pPaintBitstart );
 }
@@ -258,4 +253,81 @@ void PaintView::RestoreContent()
 				  m_pPaintBitstart);
 
 //	glDrawBuffer(GL_FRONT);
+}
+
+void PaintView::automaticDraw(){
+	//clear the background first
+	glClear(GL_COLOR_BUFFER_BIT);
+#ifndef MESA
+	// To avoid flicker on some machines.
+	glDrawBuffer(GL_FRONT_AND_BACK);
+#endif // !MESA
+	if (!valid())
+	{
+
+		glClearColor(0.7f, 0.7f, 0.7f, 1.0);
+
+		// We're only using 2-D, so turn off depth 
+		glDisable(GL_DEPTH_TEST);
+
+		ortho();
+
+		glClear(GL_COLOR_BUFFER_BIT);
+	}
+
+	Point scrollpos;// = GetScrollPosition();
+	scrollpos.x = 0;
+	scrollpos.y = 0;
+
+	m_nWindowWidth = w();
+	m_nWindowHeight = h();
+
+	int drawWidth, drawHeight;
+	drawWidth = min(m_nWindowWidth, m_pDoc->m_nPaintWidth);
+	drawHeight = min(m_nWindowHeight, m_pDoc->m_nPaintHeight);
+
+	int startrow = m_pDoc->m_nPaintHeight - (scrollpos.y + drawHeight);
+	if (startrow < 0) startrow = 0;
+
+	m_pPaintBitstart = m_pDoc->m_ucPainting +
+		3 * ((m_pDoc->m_nPaintWidth * startrow) + scrollpos.x);
+
+	m_nDrawWidth = drawWidth;
+	m_nDrawHeight = drawHeight;
+
+	m_nStartRow = startrow;
+	m_nEndRow = startrow + drawHeight;
+	m_nStartCol = scrollpos.x;
+	m_nEndCol = m_nStartCol + drawWidth;
+	
+	int origSize = m_pDoc->getSize();
+	int numOfPoints = (drawWidth / 2) * (drawHeight / 2);
+	for (int i = 0; i < numOfPoints; i++){
+		int x = rand() % drawWidth ;
+		int y = rand() % drawHeight ;
+		int modifiedSize = (origSize + (-1 * rand() % 2) * (rand() % (origSize / 4))) % 40 + 1;
+		m_pDoc->setSize(modifiedSize);
+		Point source(x + m_nStartCol, m_nEndRow - y);
+		Point target(x, m_nWindowHeight - y);
+
+		if (i == 0){
+			m_pDoc->m_pCurrentBrush->BrushBegin(source, target);
+		}
+		else if (x == numOfPoints - 1){
+			m_pDoc->m_pCurrentBrush->BrushEnd(source, target);
+		}
+		else {
+			m_pDoc->m_pCurrentBrush->BrushMove(source, target);
+		}
+		m_pDoc->setSize(origSize);
+	}
+
+	glFlush();
+	SaveCurrentContent();
+
+#ifndef MESA
+	// To avoid flicker on some machines.
+	glDrawBuffer(GL_BACK);
+#endif // !MESA
+
 }

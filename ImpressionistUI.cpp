@@ -376,6 +376,7 @@ void ImpressionistUI::cb_sizeRandomButton(Fl_Widget* o, void* v)
 void ImpressionistUI::cb_paintButton(Fl_Widget* o, void* v)
 {
 	ImpressionistUI *pUI = ((ImpressionistUI*)(o->user_data()));
+	pUI->m_paintView->automaticDraw();
 }
 
 // Updates the edge threshold slider

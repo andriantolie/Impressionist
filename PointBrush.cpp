@@ -54,5 +54,6 @@ void PointBrush::BrushEnd( const Point source, const Point target )
 	// do nothing so far
 	glBlendFunc(GL_NONE, GL_NONE);
 	glDisable(GL_BLEND);
+
 }
 
