@@ -51,8 +51,8 @@ void ScatteredCircleBrush::BrushMove(const Point source, const Point target)
 	SetColor(source);
 	glVertex2d(target.x, target.y);
 	for (int i = 0; i < numOfPoints-1; i++){
-		int xDisplacement = rand() % size + 1;
-		int yDisplacement = rand() % size + 1;
+		int xDisplacement = rand() % (size/2) + 1;
+		int yDisplacement = rand() % (size/2) + 1;
 		Point newSource(source.x + xDisplacement, source.y + yDisplacement);
 		Point newTarget(target.x + xDisplacement, target.y + yDisplacement);
 
