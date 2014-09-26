@@ -157,6 +157,19 @@ float* ImpressionistDoc::getColorBlend() {
 	return m_pUI->getColorBlend();
 }
 
+//------------------------------------------------
+// Return the spacing
+//------------------------------------------------
+
+int	ImpressionistDoc::getSpacing(){
+	return m_pUI->getSpacing();
+}
+//------------------------------------------------
+// Return the randomness of size
+//------------------------------------------------
+bool ImpressionistDoc::getSizeRandomness(){
+	return m_pUI->getSizeRandomness();
+}
 //---------------------------------------------------------
 // Load the specified image
 // This is called by the UI when the load image button is 

@@ -33,7 +33,7 @@ void CircleBrush::BrushMove (const Point source, const Point target) {
 	ImpressionistUI* dlg=pDoc->m_pUI;
 
 	if ( pDoc == NULL ) {
-		printf( "CircleBrush::BrushMove document is NULL\n" );
+		printf( "Circlerush::BrushMove document is NULL\n" );
 		return;
 	}
 	int size = pDoc->getSize();

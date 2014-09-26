@@ -84,7 +84,8 @@ public:
 	float				getAlpha();
 
 	float*				getColorBlend();
-
+	int				getSpacing();
+	bool			getSizeRandomness();
 
 
 private:

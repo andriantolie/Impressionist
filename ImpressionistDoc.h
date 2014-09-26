@@ -36,7 +36,8 @@ public:
 	float*    getColorBlend();				//get color blend value
 
 	char*	getImageName();					// get the current image name
-	
+	int				getSpacing();
+	bool			getSizeRandomness();
 
 // Attributes
 public:
