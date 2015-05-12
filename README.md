@@ -1,4 +1,3 @@
-COMP4411-Impressionist
+Impressionist
 ======================
-
-COMP4411 Computer Graphics 1st Project
+Computer Graphics Assignment - Impressionist
